@@ -25,19 +25,17 @@ y=df["Price"]
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-preprocessing = ColumnTransformer(transformers=[
+preprocessor = ColumnTransformer(transformers=[
     ('num', StandardScaler(), ['Mileage', 'Cylinder', 'Liter', 'Doors']),
     ('cat', OneHotEncoder(), ['Make', 'Model', 'Trim', 'Type'])])
 
 model=LinearRegression()
 
-pipeline = Pipeline(steps=[('preprocessor', preprocessing),
+pipe = Pipeline(steps=[('preprocessor', preprocessor),
                            ('model', model)])
-pipeline.fit(X_train, y_train)
-y_pred = pipeline.predict(X_test)
-
-print('R2 score: %.2f' % r2_score(y_test, y_pred))
-print('Mean squared error: %.2f' % mean_squared_error(y_test, y_pred))
+pipe.fit(X_train, y_train)
+y_pred = pipe.predict(X_test)
+mean_squared_error(y_test,y_pred)**0.5,r2_score(y_test,y_pred)
 
 def price(make,model,trim,mileage,car_type,cylinder,liter,doors,cruise,sound,leather):
 	input_data=pd.DataFrame({
@@ -54,7 +52,7 @@ def price(make,model,trim,mileage,car_type,cylinder,liter,doors,cruise,sound,lea
 		'Sound':[sound],
 		'Leather':[leather]
 		})
-	prediction=pipeline.predict(input_data)[0]
+	prediction=pipe.predict(input_data)[0]
 	return prediction
 st.title("Car Price Prediction :red_car: @drmurataltun")
 st.write("Enter Car Details to predict the price of the car")
@@ -72,4 +70,4 @@ leather=st.radio("Leather",[True,False])
 if st.button("Predict"):
 	pred=price(make,model,trim,mileage,car_type,cylinder,liter,doors,cruise,sound,leather)
 
-	st.write("Predicted Price :red_car: ",round(pred[0],2))
+	st.write("Predicted Price :red_car:  $",round(pred[0],2))
