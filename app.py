@@ -72,4 +72,4 @@ leather=st.radio("Leather",[True,False])
 if st.button("Predict"):
 	pred=price(make,model,trim,mileage,car_type,cylinder,liter,doors,cruise,sound,leather)
 
-	st.write("Predicted Price :red_car:  $",round(pred[0],2))
+	st.write("Predicted Price :red_car: ",round(pred[0],2))
